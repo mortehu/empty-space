@@ -1,0 +1,85 @@
+# Modified to not create shared objects
+srcdir = @srcdir@
+prefix = @prefix@
+VPATH = @srcdir@
+
+CXX = @CXX@
+CXXFLAGS = @CXXFLAGS@
+CPPFLAGS = @CPPFLAGS@
+DEFS = @DEFS@
+LDFLAGS = @LDFLAGS@
+INSTALL = @INSTALL@
+DLLTOOL = @DLLTOOL@
+RANLIB = @RANLIB@
+
+WIN32 = @WIN32@
+
+CXXCOMPILE = $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(DEFS)
+
+SOURCES = main.cc png.cc simpleshader.cc wav.cc png.h simpleshader.h wav.h
+DISTFILES = $(SOURCES) Makefile.in
+
+ifeq ($(WIN32),1)
+LIBRARIES = plugin_std.dll
+else
+#LIBRARIES = plugin_std.so
+LIBRARIES = plugin_std.a
+endif
+
+plugin_std_OBJECTS = \
+  main.o \
+	png.o \
+  simpleshader.o \
+  wav.o
+
+CPPFLAGS += -I$(srcdir)/../include -DPIC
+CXXFLAGS += -fno-exceptions -ansi -pedantic -Wall -W -pipe
+
+DEPDIR = .deps
+
+all: $(LIBRARIES)
+
+#install: $(LIBRARIES)
+#	mkdir -p $(DESTDIR)$(prefix)/lib/empty-space
+#	-rm -f $(DESTDIR)$(prefix)/lib/empty-space/plugin_std.so
+#	$(INSTALL) --mode 644 plugin_std.so $(DESTDIR)$(prefix)/lib/empty-space/plugin_std.so
+
+-include $(DEPDIR)/main.Po
+-include $(DEPDIR)/png.Po
+-include $(DEPDIR)/simpleshader.Po
+-include $(DEPDIR)/wav.Po
+
+plugin_std.a: $(plugin_std_OBJECTS)
+	-rm -f plugin_std.a
+	ar q plugin_std.a $(plugin_std_OBJECTS)
+	$(RANLIB) plugin_std.a
+
+clean:
+	-rm *.o
+
+distclean:
+	-rm -rf .deps
+	-rm *.o plugin_std.so
+	-rm Makefile
+
+distdir:
+	@for file in $(DISTFILES); do \
+	  d=$(srcdir); \
+	  if test -d $$d/$$file; then \
+	    cp -pr $$d/$$file $(distdir)/$$file; \
+	  else \
+	    test -f $(distdir)/$$file \
+	    || ln $$d/$$file $(distdir)/$$file 2> /dev/null \
+	    || cp -p $$d/$$file $(distdir)/$$file || :; \
+	  fi; \
+	done
+
+.cc.o:
+	if $(CXXCOMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" \
+	  -c -o $@ `test -f '$<' || echo '$(srcdir)'/`$<; \
+	then mv -f "$(DEPDIR)/$*.Tpo" "$(DEPDIR)/$*.Po"; \
+	else rm -f "$(DEPDIR)/$*.Tpo"; exit 1; \
+	fi
+
+Makefile: Makefile.in
+	cd .. && ./config.status

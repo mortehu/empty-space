@@ -1,0 +1,25 @@
+Compiling with MINGW on Debian
+==============================
+
+  Creating libpython23.a
+
+    - Download and unzip the Windows installer for Python 2.3.
+    - Move the include files to /usr/i586-mingw32msvc/include/python2.3
+    - Move python23.dll and python23.lib to /usr/i586-mingw32msvc/lib
+    - Run pexports python23.dll > python23.def
+    - Run dlltool --dllname python23.dll --def python23.def \
+                  --output-lib libpython23.a
+
+  Environment variables
+
+    AR=/usr/i586-mingw32msvc/bin/ar
+    AS=/usr/i586-mingw32msvc/bin/as
+    DLLTOOL=/usr/i586-mingw32msvc/bin/dlltool
+    LD=/usr/i586-mingw32msvc/bin/ld
+    NM=/usr/i586-mingw32msvc/bin/nm
+    RANLIB=/usr/i586-mingw32msvc/bin/ranlib
+    STRIP=/usr/i586-mingw32msvc/bin/strip
+
+  Configuring
+
+    ./configure --host=i586-mingw32msvc --prefix=/usr/i586-mingw32msvc
