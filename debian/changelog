@@ -1,0 +1,48 @@
+empty-space (0.9.20031220-1) unstable; urgency=low
+
+  * New upstream version.
+
+ -- Morten Hustveit <morten@debian.org>  Sat, 20 Dec 2003 23:26:13 +0100
+
+empty-space (0.9.20031120-1) unstable; urgency=low
+
+  * Added more documentation to the headers.
+
+ -- Morten Hustveit <morten@debian.org>  Thu, 20 Nov 2003 00:01:00 +0100
+
+empty-space (0.9.20031119-1) unstable; urgency=low
+
+  * New upstream version.
+
+ -- Morten Hustveit <morten@debian.org>  Wed, 19 Nov 2003 17:33:19 +0100
+
+empty-space (0.9.20031103-2) unstable; urgency=low
+
+  * Fixed dependencies.
+
+ -- Morten Hustveit <morten@debian.org>  Mon,  3 Nov 2003 15:47:14 +0100
+
+empty-space (0.9.20031103-1) unstable; urgency=low
+
+  * Fixed animation code.
+
+ -- Morten Hustveit <morten@debian.org>  Mon,  3 Nov 2003 10:29:15 +0100
+
+empty-space (0.9.20031102-1) unstable; urgency=low
+
+  * Moved Python interface into main source package.
+  * Added call to sched_yield(), removing OpenAL stuttering.
+
+ -- Morten Hustveit <morten@debian.org>  Sun,  2 Nov 2003 13:21:33 +0100
+
+empty-space (0.9.20031101-2) unstable; urgency=low
+
+  * Don't use -fexport-dynamic.
+
+ -- Morten Hustveit <morten@debian.org>  Sat,  1 Nov 2003 17:26:41 +0100
+
+empty-space (0.9.20031101-1) unstable; urgency=low
+
+  * Initial revision.
+
+ -- Morten Hustveit <morten@debian.org>  Fri, 31 Oct 2003 18:58:53 +0100

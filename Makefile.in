@@ -1,0 +1,185 @@
+srcdir = @srcdir@
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+libdir = @libdir@
+VPATH = @srcdir@
+
+CXX = @CXX@
+CXXFLAGS = @CXXFLAGS@
+CPPFLAGS = -DLIBDIR=\"$(libdir)\" @CPPFLAGS@
+DEFS = @DEFS@
+LDFLAGS = @LDFLAGS@
+INSTALL = @INSTALL@
+DLLTOOL = @DLLTOOL@
+
+LINUX = @LINUX@
+GNU = @GNU@
+X11 = @X11@
+WIN32 = @WIN32@
+NULLSYS = @NULLSYS@
+
+EXEEXT = @EXEEXT@
+
+CXXCOMPILE = $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(DEFS)
+
+libespace_MAJOR = 0
+libespace_MINOR = 0
+libespace_REV = 0
+libespace_VERSION = $(libespace_MAJOR).$(libespace_MINOR).$(libespace_REV)
+
+ifeq ($(WIN32),1)
+LIBRARIES = espace32.dll
+else
+LIBRARIES = libespace.so.$(libespace_VERSION) libespace.so
+endif
+
+libespace_OBJECTS = \
+  api.o \
+  api_commands.o \
+  cvar.o \
+  console.o \
+  file.o \
+	font.o \
+  image.o \
+  input.o \
+  matrix.o \
+  map.o \
+  media.o \
+  model.o \
+  openal.o \
+  opengl.o \
+  output.o \
+  network.o \
+  plugins.o \
+  preprocessor.o \
+  renderer.o \
+  shader.o \
+  skin.o \
+  sound.o \
+  string.o \
+  stringlist.o \
+  texture.o
+libespace_LDFLAGS =
+
+ifeq ($(LINUX),1)
+libespace_LDFLAGS += -Wl,-soname,libespace.so.$(libespace_MAJOR)
+libespace_OBJECTS += system_linux.o
+endif
+ifeq ($(GNU),1)
+libespace_LDFLAGS += -lstdc++
+libespace_OBJECTS += system_gnu.o
+endif
+ifeq ($(X11),1)
+libespace_OBJECTS += system_x11.o
+endif
+ifeq ($(WIN32),1)
+libespace_OBJECTS += system_win32.o
+endif
+ifeq ($(NULLSYS),1)
+libespace_OBJECTS += system_null.o
+endif
+
+ifeq ($(X11),1)
+libespace_LDFLAGS += -L/usr/X11R6/lib -lX11 -lXext -lXxf86vm -lGL
+endif
+ifeq ($(WIN32),1)
+libespace_LDFLAGS += -limagehlp -lgdi32 -lopengl32 -Wl,--out-implib,libespace.a
+endif
+
+CPPFLAGS += -I$(srcdir)/include -DPIC -Despace_DLL
+CXXFLAGS += -fno-exceptions -Wall -W -pipe
+
+ifneq ($(WIN32),1)
+CXXFLAGS += -fPIC
+endif
+
+DEPDIR = .deps
+
+all: $(LIBRARIES) $(PROGRAMS)
+	(cd plugins && $(MAKE))
+
+install: $(LIBRARIES) $(PROGRAMS)
+	mkdir -p $(DESTDIR)$(prefix)/lib
+	$(INSTALL) -D --mode 644 libespace.so.$(libespace_VERSION) $(DESTDIR)$(prefix)/lib/libespace.so.$(libespace_VERSION)
+	ln -f -s libespace.so.$(libespace_VERSION) $(DESTDIR)$(prefix)/lib/libespace.so.0
+	ln -f -s libespace.so.0 $(DESTDIR)$(prefix)/lib/libespace.so
+	-rm -rf $(DESTDIR)$(prefix)/include/espace
+	mkdir -p $(DESTDIR)$(prefix)/include/espace
+	$(INSTALL) --mode 644 $(srcdir)/include/espace/*.h $(DESTDIR)$(prefix)/include/espace
+	(cd plugins && $(MAKE) install)
+
+-include $(DEPDIR)/api.Po
+-include $(DEPDIR)/api_commands.Po
+-include $(DEPDIR)/cvar.Po
+-include $(DEPDIR)/console.Po
+-include $(DEPDIR)/file.Po
+-include $(DEPDIR)/font.Po
+-include $(DEPDIR)/image.Po
+-include $(DEPDIR)/input.Po
+-include $(DEPDIR)/matrix.Po
+-include $(DEPDIR)/map.Po
+-include $(DEPDIR)/media.Po
+-include $(DEPDIR)/model.Po
+-include $(DEPDIR)/montage.Po
+-include $(DEPDIR)/openal.Po
+-include $(DEPDIR)/opengl.Po
+-include $(DEPDIR)/output.Po
+-include $(DEPDIR)/network.Po
+-include $(DEPDIR)/plugins.Po
+-include $(DEPDIR)/preprocessor.Po
+-include $(DEPDIR)/renderer.Po
+-include $(DEPDIR)/shader.Po
+-include $(DEPDIR)/skin.Po
+-include $(DEPDIR)/sound.Po
+-include $(DEPDIR)/string.Po
+-include $(DEPDIR)/stringlist.Po
+-include $(DEPDIR)/texture.Po
+
+ifeq ($(LINUX),1)
+-include $(DEPDIR)/system_linux.Po
+endif
+ifeq ($(GNU),1)
+-include $(DEPDIR)/system_gnu.Po
+endif
+ifeq ($(X11),1)
+-include $(DEPDIR)/system_x11.Po
+endif
+ifeq ($(WIN32),1)
+-include $(DEPDIR)/system_win32.Po
+endif
+ifeq ($(NULLSYS),1)
+-include $(DEPDIR)/system_null.Po
+endif
+
+libespace.so.$(libespace_VERSION): $(libespace_OBJECTS)
+	$(CXX) -shared $(LDFLAGS) $(CXXFLAGS) -o $@ $(libespace_OBJECTS) $(libespace_LDFLAGS)
+
+libespace.so: libespace.so.$(libespace_VERSION)
+	ln -f -s libespace.so.$(libespace_VERSION) libespace.so
+
+espace32.dll: $(libespace_OBJECTS)
+	$(DLLTOOL) -e libespace_exports.o $(libespace_OBJECTS)
+	$(CXX) -shared $(libespace_OBJECTS) libespace_exports.o -o $@ $(libespace_LDFLAGS)
+
+clean:
+	-rm *.o
+	(cd plugins && $(MAKE) clean)
+
+distclean:
+	-rm *.o libespace.so*
+	-rm -rf .deps
+	(cd plugins && $(MAKE) distclean)
+	-rm Makefile
+
+.cc.o:
+	if $(CXXCOMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" \
+	  -c -o $@ `test -f '$<' || echo '$(srcdir)'/`$<; \
+	then mv -f "$(DEPDIR)/$*.Tpo" "$(DEPDIR)/$*.Po"; \
+	else rm -f "$(DEPDIR)/$*.Tpo"; exit 1; \
+	fi
+
+Makefile: Makefile.in config.status
+	./config.status
+
+config.status: configure
+	./config.status --recheck

@@ -1,0 +1,88 @@
+AC_INIT(empty-space,0.9,morten@rashbox.org)
+
+AC_PROG_CXX
+AC_PROG_INSTALL
+AC_PROG_MAKE_SET
+
+AC_CANONICAL_HOST
+
+LINUX=0
+GNU=0
+X11=0
+WIN32=0
+NULLSYS=0
+
+case "$host" in
+   powerpc-*-linux-gnu*)
+
+    if [[ $(expr match "`g++ --version | sed '1!D;'`" "g++ (GCC) 3.3") -eq 13 ]]
+    then 
+      # Workaround for bug in G++ 3.3
+      CXXFLAGS="$CXXFLAGS -fno-loop-optimize"
+    fi
+
+    # Add -maltivec -mabi=altivec if asked for
+    LINUX=1
+    GNU=1
+    CPPFLAGS="$CPPFLAGS -DLINUX -DGNU"
+
+    ;;
+
+   *-linux-gnu*)
+
+    LINUX=1
+    GNU=1
+    CPPFLAGS="$CPPFLAGS -DLINUX -DGNU"
+
+    ;;
+
+   *-cygwin*)
+
+    WIN32=1
+    CPPFLAGS="$CPPFLAGS -DWIN32"
+    CXXFLAGS="$CXXFLAGS -mno-cygwin"
+
+    ;;
+
+   *-mingw32*)
+
+    WIN32=1
+    CPPFLAGS="$CPPFLAGS -DWIN32"
+
+    ;;
+
+   *)
+
+    NULLSYS=1
+    CPPFLAGS="$CPPFLAGS -DNULLSYS"
+
+    ;;
+esac
+
+# GNU and X11 are kept separate to allow combinations such as SDL+GNU,
+# DirectFB+GNU and X11+BSD in the future.
+
+if [[ $GNU -eq 1 ]]
+then
+  X11=1
+  CPPFLAGS="$CPPFLAGS -DX11"
+fi
+
+AC_CHECK_TOOL(DLLTOOL, dlltool)
+
+AC_CHECK_HEADER(AL/altypes.h, , AC_MSG_ERROR(missing <AL/altypes.h>.  Install Debian package libopenal-dev))
+AC_CHECK_HEADER(jpeglib.h, , AC_MSG_ERROR(missing <jpeglib.h>.  Install Debian package libjpeg62-dev))
+AC_CHECK_HEADER(zlib.h, , AC_MSG_ERROR(missing <zlib.h>.  Install Debian package zlib1g-dev))
+
+AC_SUBST(CXXFLAGS)
+AC_SUBST(LINUX)
+AC_SUBST(GNU)
+AC_SUBST(X11)
+AC_SUBST(WIN32)
+AC_SUBST(NULLSYS)
+
+mkdir .deps 2>/dev/null
+mkdir plugins 2>/dev/null
+mkdir plugins/.deps 2>/dev/null
+
+AC_OUTPUT(Makefile plugins/Makefile)

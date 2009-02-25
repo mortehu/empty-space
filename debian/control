@@ -1,0 +1,42 @@
+Source: empty-space
+Section: devel
+Priority: optional
+Maintainer: Morten Hustveit <morten@debian.org>
+Standards-Version: 3.5.8
+Build-Depends: debhelper, libjpeg-dev, libopenal-dev, giflib-dev, libpng-dev, libvorbis-dev, xlibs-dev, libgl-dev, python2.3-dev
+
+Package: libespace-dev
+Section: libdevel
+Architecture: any
+Depends: libespace (= ${Source-Version}), libc6-dev
+Description: Development files for the Empty Space game library
+ This package contains the header files needed for developing applications
+ with the Empty Space game library.
+
+Package: libespace-plugins
+Section: libs
+Architecture: any
+Depends: libespace (= ${Source-Version}), ${shlibs:Depends}
+Provides: libespace-plugins
+Description: Plugins for the Empty Space game library
+ This package contains a set of plugins for the Empty Space game library,
+ with support for the following formats: Quake 3 BSP, JPEG JFIF, MD3, MDC,
+ MDS, Quake 3 shaders, RoQ video, TGA, RIFF WAVE PCM, ZIP, GIF, PNG and
+ Ogg Vorbis.
+
+Package: libespace
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: The Empty Space game library
+ This package contains the Empty Space game library, needed for running
+ games and programs linked to libespace.
+
+Package: python2.3-espace
+Section: python
+Architecture: any
+Depends: libespace (= ${Source-Version}), python2.3
+Description: Python interface for the Empty Space game library
+ This package contains the Python interface for Empty Space, needed for
+ running and developing Python games and programs utilizing Empty Space.
+

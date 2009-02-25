@@ -1,0 +1,107 @@
+srcdir = @srcdir@
+prefix = @prefix@
+VPATH = @srcdir@
+
+CXX = @CXX@
+CXXFLAGS = @CXXFLAGS@
+CPPFLAGS = @CPPFLAGS@
+DEFS = @DEFS@
+LDFLAGS = @LDFLAGS@
+INSTALL = @INSTALL@
+DLLTOOL = @DLLTOOL@
+
+WIN32 = @WIN32@
+
+CXXCOMPILE = $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(DEFS)
+
+ifeq ($(WIN32),1)
+LIBRARIES = plugin_std.dll
+else
+LIBRARIES = plugin_std.so
+endif
+
+plugin_std_OBJECTS = \
+  main.o \
+  bsp_read.o \
+  bsp_trace.o \
+  bsp.o \
+	gif.o \
+  jpeg.o \
+  md3.o \
+  mdc.o \
+  mds.o \
+	png.o \
+  q3shader.o \
+  roq.o \
+  rtcwfont.o \
+  simpleshader.o \
+  tga.o \
+	vorbis.o \
+  wav.o \
+  zip.o
+
+ifeq ($(WIN32), 1)
+plugin_std_LDFLAGS = -lz -ljpeg -lungif -lpng -lvorbisfile -lvorbis -logg -L.. -lespace -Wl,--disable-auto-import
+else
+plugin_std_LDFLAGS = -lz -ljpeg -lgif -lpng -lvorbisfile -lvorbis -L.. -lespace
+endif
+
+CPPFLAGS += -I$(srcdir)/../include -DPIC
+CXXFLAGS += -fno-exceptions -ansi -pedantic -Wall -W -pipe
+
+ifneq ($(WIN32),1)
+CXXFLAGS += -fPIC
+endif
+
+DEPDIR = .deps
+
+all: $(LIBRARIES)
+
+install: $(LIBRARIES)
+	mkdir -p $(DESTDIR)$(prefix)/lib/empty-space
+	-rm -f $(DESTDIR)$(prefix)/lib/empty-space/plugin_std.so
+	$(INSTALL) --mode 644 plugin_std.so $(DESTDIR)$(prefix)/lib/empty-space/plugin_std.so
+
+-include $(DEPDIR)/main.Po
+-include $(DEPDIR)/bsp_read.Po  
+-include $(DEPDIR)/bsp_trace.Po  
+-include $(DEPDIR)/bsp.Po
+-include $(DEPDIR)/gif.Po
+-include $(DEPDIR)/jpeg.Po
+-include $(DEPDIR)/md3.Po
+-include $(DEPDIR)/mdc.Po
+-include $(DEPDIR)/mds.Po
+-include $(DEPDIR)/png.Po
+-include $(DEPDIR)/q3shader.Po
+-include $(DEPDIR)/roq.Po
+-include $(DEPDIR)/rtcwfont.Po
+-include $(DEPDIR)/simpleshader.Po
+-include $(DEPDIR)/tga.Po
+-include $(DEPDIR)/vorbis.Po
+-include $(DEPDIR)/wav.Po
+-include $(DEPDIR)/zip.Po
+
+plugin_std.so: $(plugin_std_OBJECTS)
+	$(CXX) -shared $(LDFLAGS) $(CXXFLAGS) -o $@ $(plugin_std_OBJECTS) $(plugin_std_LDFLAGS)
+
+plugin_std.dll: $(plugin_std_OBJECTS)
+	$(DLLTOOL) -e plugin_std_exports.o $(plugin_std_OBJECTS)
+	$(CXX) -shared $(plugin_std_OBJECTS) plugin_std_exports.o -o $@ $(plugin_std_LDFLAGS)
+
+clean:
+	-rm *.o
+
+distclean:
+	-rm -rf .deps
+	-rm *.o plugin_std.so
+	-rm Makefile
+
+.cc.o:
+	if $(CXXCOMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" \
+	  -c -o $@ `test -f '$<' || echo '$(srcdir)'/`$<; \
+	then mv -f "$(DEPDIR)/$*.Tpo" "$(DEPDIR)/$*.Po"; \
+	else rm -f "$(DEPDIR)/$*.Tpo"; exit 1; \
+	fi
+
+Makefile: Makefile.in
+	cd .. && ./config.status
