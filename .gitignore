@@ -1,0 +1,12 @@
+.deps
+Makefile
+configure
+*.log
+*.cache
+*.status
+*~
+*.o
+*.so
+*.so.*
+*.lo
+.*.sw?
