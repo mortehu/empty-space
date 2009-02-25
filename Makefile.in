@@ -39,7 +39,7 @@ libespace_OBJECTS = \
   cvar.o \
   console.o \
   file.o \
-	font.o \
+  font.o \
   image.o \
   input.o \
   matrix.o \
@@ -87,7 +87,7 @@ libespace_LDFLAGS += -limagehlp -lgdi32 -lopengl32 -Wl,--out-implib,libespace.a
 endif
 
 CPPFLAGS += -I$(srcdir)/include -DPIC -Despace_DLL
-CXXFLAGS += -fno-exceptions -Wall -W -pipe
+CXXFLAGS += -fno-exceptions -Wall -W -Werror -pipe
 
 ifneq ($(WIN32),1)
 CXXFLAGS += -fPIC

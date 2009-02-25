@@ -101,7 +101,6 @@ namespace
   uint        normalStride;
   const char* normalPointer = 0;
 
-  Renderer::Source vertexSource = Renderer::Source_Constant;
   Renderer::Source colorSource = Renderer::Source_Constant;
   Renderer::Source texCoordSource[16]; // Init in initialize()
   Renderer::Source normalSource = Renderer::Source_Constant;
@@ -704,7 +703,7 @@ void Renderer::setTexCoordArray(uint index, const void* coords, uint stride)
   // XXX: Iterate to max used texture level instead of 16.
   for(uint level = 0; level < 16; ++level)
   {
-    if(texCoordSource[level] == Source_Array0 + index)
+    if(texCoordSource[level] == (Renderer::Source) (Source_Array0 + index))
     {
       GL::clientActiveTextureARB(GL::TEXTURE0_ARB + level);
 

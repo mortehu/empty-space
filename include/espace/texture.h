@@ -12,7 +12,7 @@ struct Image;
  */
 struct Texture
 {
-  static const uint lightmap = ~0UL;
+  static const uint lightmap = (uint) ~0UL;
 
   enum Flags
   {

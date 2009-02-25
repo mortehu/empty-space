@@ -173,7 +173,7 @@ namespace
          || pixelFormat == Image::RGBA16) ? GL::RGBA
       : (   pixelFormat == Image::Gray
          || pixelFormat == Image::Gray16) ? GL::LUMINANCE
-      : 0,
+      : GL::FALSE,
       image->dataType(),
       image->data());
 
@@ -218,7 +218,7 @@ namespace
               (pixelFormat == Image::RGB)  ? GL::RGB
             : (pixelFormat == Image::RGBA) ? GL::RGBA
             : (pixelFormat == Image::Gray) ? GL::LUMINANCE
-            : 0,
+            : GL::FALSE,
             GL::UNSIGNED_BYTE,
             data);
 
@@ -264,7 +264,7 @@ namespace
               (pixelFormat == Image::RGB16)  ? GL::RGB
             : (pixelFormat == Image::RGBA16) ? GL::RGBA
             : (pixelFormat == Image::Gray16) ? GL::LUMINANCE
-            : 0,
+            : GL::FALSE,
             GL::UNSIGNED_SHORT,
             data);
 
