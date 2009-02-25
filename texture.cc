@@ -82,7 +82,7 @@ uint Texture::acquire(Image* image, uint flags)
 
   handle.glHandle = upload(image, flags);
 
-  handles[String::number(reinterpret_cast<int>(image))] = handle;
+  handles[String::format("%p", image)] = handle;
 
   return handle.glHandle;
 }

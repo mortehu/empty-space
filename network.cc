@@ -550,7 +550,7 @@ void Network::disconnect()
 
   localClient.socket.socket = INVALID_SOCKET;
 
-  config.eventHandler(0, Disconnect);
+  config.eventHandler(0, Disconnect, 0);
 }
 
 void Network::sendSnapshot(const void* _snapshot)
@@ -791,7 +791,7 @@ void Network::idle()
 
         clients[nextClient] = client;
 
-        config.eventHandler(nextClient, Connect);
+        config.eventHandler(nextClient, Connect, 0);
 
         std::ostringstream command;
 
@@ -966,7 +966,7 @@ void Network::idle()
 
         socket.socket = INVALID_SOCKET;
 
-        config.eventHandler(0, Disconnect);
+        config.eventHandler(0, Disconnect, 0);
 
         return;
       }
@@ -1073,7 +1073,7 @@ void Network::idle()
 
         localClient.socket.socket = INVALID_SOCKET;
 
-        config.eventHandler(0, Disconnect);
+        config.eventHandler(0, Disconnect, 0);
 
         return;
       }
@@ -1104,7 +1104,7 @@ void Network::idle()
 
         clients.erase(i);
 
-        config.eventHandler(i->first, Disconnect);
+        config.eventHandler(i->first, Disconnect, 0);
 
         continue;
       }
@@ -1206,7 +1206,7 @@ void Network::idle()
 
         clients.erase(i);
 
-        config.eventHandler(i->first, Disconnect);
+        config.eventHandler(i->first, Disconnect, 0);
 
         continue;
       }

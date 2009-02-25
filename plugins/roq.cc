@@ -123,7 +123,7 @@ bool RoQ::canHandle(File& file)
   if(file.length() < 6)
     return false;
 
-  const char magic[] = { 0x84, 0x10, 0xff, 0xff, 0xff, 0xff };
+  const unsigned char magic[] = { 0x84, 0x10, 0xff, 0xff, 0xff, 0xff };
   char tmp[6];
 
   file.seek(0);

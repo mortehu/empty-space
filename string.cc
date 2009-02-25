@@ -18,6 +18,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
+#include <stdarg.h>
 
 #include <espace/string.h>
 #include <espace/types.h>
@@ -341,6 +342,18 @@ String String::number(double number)
   char tmp[512];
 
   sprintf(tmp, "%g", number);
+
+  return String(tmp);
+}
+
+String String::format(const char* fmt, ...)
+{
+  va_list args;
+  char* tmp;
+
+  va_start(args, fmt);
+
+  vasprintf(&tmp, fmt, args);
 
   return String(tmp);
 }

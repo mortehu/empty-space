@@ -2,8 +2,8 @@
 #define OPENAL_H_
 
 #define AL_NO_PROTOTYPES
-#include <AL/altypes.h>
-#include <AL/alctypes.h>
+#include <AL/al.h>
+#include <AL/alc.h>
 
 #ifdef _WIN32
 struct _AL_device;
@@ -28,7 +28,7 @@ struct AL
   typedef void      (*alGetFloatv)(ALenum param, ALfloat* data);
   typedef void      (*alGetDoublev)(ALenum param, ALdouble* data);
   typedef const ALubyte* (*alGetString)(ALenum param);
-  typedef ALenum    (*alGetError)(ALvoid);
+  typedef ALenum    (*alGetError)();
   typedef ALboolean (*alIsExtensionPresent)(const ALubyte* fname);
   typedef void*     (*alGetProcAddress)(const ALubyte* fname);
   typedef ALenum    (*alGetEnumValue)(const ALubyte* ename);

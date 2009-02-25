@@ -70,7 +70,7 @@ fi
 
 AC_CHECK_TOOL(DLLTOOL, dlltool)
 
-AC_CHECK_HEADER(AL/altypes.h, , AC_MSG_ERROR(missing <AL/altypes.h>.  Install Debian package libopenal-dev))
+AC_CHECK_HEADER(AL/al.h, , AC_MSG_ERROR(missing <AL/al.h>.  Install Debian package libopenal-dev))
 AC_CHECK_HEADER(jpeglib.h, , AC_MSG_ERROR(missing <jpeglib.h>.  Install Debian package libjpeg62-dev))
 AC_CHECK_HEADER(zlib.h, , AC_MSG_ERROR(missing <zlib.h>.  Install Debian package zlib1g-dev))
 

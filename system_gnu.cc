@@ -70,7 +70,7 @@ void* System::dlopen(const char* fileName)
   return ::dlopen(fileName, RTLD_NOW);
 }
 
-void* System::dlsym(void* handle, char* symbol)
+void* System::dlsym(void* handle, const char* symbol)
 {
   return ::dlsym(handle, symbol);
 }

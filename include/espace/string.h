@@ -372,6 +372,11 @@ public:
    */
   static String number(double number);
 
+  /*
+   * Return a string created by a `printf' style format.
+   */
+  static String format(const char* fmt, ...);
+
 protected:
 
   void detach()

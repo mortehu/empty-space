@@ -451,7 +451,7 @@ void Console::render()
   }
 
   const int pageSize = 10;
-  std::deque<String>::iterator line = buffer.begin() + std::min(buffer.size(), page * pageSize);
+  std::deque<String>::iterator line = buffer.begin() + std::min(buffer.size(), (size_t) (page * pageSize));
 
   for(;y > 0 && line != buffer.end(); ++line)
     print(*line);

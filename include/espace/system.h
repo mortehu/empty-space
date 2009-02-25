@@ -46,7 +46,7 @@ struct System
    * \param symbol NULL-terminated symbol name.
    * \return NULL on failure, address on success.
    */
-  static IMPORT void* dlsym(void* handle, char* symbol);
+  static IMPORT void* dlsym(void* handle, const char* symbol);
   /**
    * Get human readable error message.
    * \return Pointer to the last error message.

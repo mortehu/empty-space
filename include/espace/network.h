@@ -8,7 +8,7 @@
 
 struct NetConfig
 {
-  typedef void (*EventHandler)(int client, int event, void* arg = 0);
+  typedef void (*EventHandler)(int client, int event, void* arg);
 
   EventHandler    eventHandler;
   uint            snapshotSize;

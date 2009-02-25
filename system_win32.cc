@@ -301,7 +301,7 @@ void* System::dlopen(const char* _fileName)
   return ret;
 }
 
-void* System::dlsym(void* handle, char* symbol)
+void* System::dlsym(void* handle, const char* symbol)
 {
   return (void*) GetProcAddress(reinterpret_cast<HMODULE>(handle), symbol);
 }
